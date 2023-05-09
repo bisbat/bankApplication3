@@ -1,6 +1,7 @@
 
 package bankingapplication3;
 
+import java.util.Random;
 import java.util.Scanner;
 
 
@@ -13,7 +14,7 @@ public class BankingApplication3 {
         String name;
         double balance,amount;
         Account account;
-        Bank bank =new Bank("");
+        Bank bank =new Bank("scb2");
         while(option !=6){
             System.out.println("Main Menu");
             System.out.println("1. Display all accounts");
@@ -34,7 +35,7 @@ public class BankingApplication3 {
                     bank.listAccount();
                     break;
                 case 2:
-                    number=11111;
+                    number=generateAccountNumber();
                     System.out.print("Enter account name: ");
                     name=kb.nextLine();
                     System.out.print("Enter Initial Balance: ");
@@ -62,8 +63,14 @@ public class BankingApplication3 {
                     System.out.print("Enter Amount: ");
                     amount=kb.nextDouble();
                     bank.withdrawMoney(account, amount);
+                    break;
             }
         }
+    }
+    public static int generateAccountNumber(){
+        Random random=new Random();
+        int accNumber=100+random.nextInt(900);
+        return accNumber;
     }
     
 }
