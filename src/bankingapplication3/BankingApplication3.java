@@ -65,11 +65,12 @@ public class BankingApplication3 {
                     bank.withdrawMoney(account, amount);
                     break;
             }
+           
         }
     }
     public static int generateAccountNumber(){
         Random random=new Random();
-        int accNumber=100+random.nextInt(900);
+        int accNumber=100000+random.nextInt(900000);
         return accNumber;
     }
     
