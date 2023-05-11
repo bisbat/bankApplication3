@@ -49,29 +49,58 @@ public class Bank {
         }
     }
     public void depositMoney(Account account,double amount){
+        Account account = getAccount(number);
         account.deposit(amount);
-        System.out.println(account.getBalance());
-        Connection con=BankConnection.connect();
-        
-        String sql="UPDATE account set accbalance =? where accID=?";
+        Connection connection = BankingConnection.connect();
+        String sql = "UPDATE account SET accBalance=? WHERE accNumber=?";
+        PreparedStatement preparedStatement;
         try {
-            PreparedStatement preparedStatement=con.prepareStatement(sql);
-             preparedStatement.setDouble(1, account.getBalance());
-             preparedStatement.setInt(2, account.getNumber());
-             preparedStatement.executeUpdate();
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1, account.getBalance());
+            preparedStatement.setInt(2, account.getNumber());
+            System.out.println("Balance: " + account.getBalance());
+            preparedStatement.executeUpdate();
         } catch (SQLException ex) {
             Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     public void withdrawMoney(Account account,double amount){
+        Account account = getAccount(number);
         account.withdraw(amount);
+        Connection connection = BankingConnection.connect();
+        String sql = "UPDATE account SET accBalance=? WHERE accNumber=?";
+        PreparedStatement preparedStatement;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setDouble(1, account.getBalance());
+            preparedStatement.setInt(2, account.getNumber());
+            preparedStatement.executeUpdate();
+            System.out.println("Balance: " + account.getBalance());
+        } catch (SQLException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
         
     }
     public Account getAccount(int number){
-        String accountName="baitong";
-        double balance=500;
-        Account account=new Account(number,accountName,balance);
+        Connection connection = BankingConnection.connect();
+        String sql = "SELECT * FROM account WHERE accNumber=?";
+        PreparedStatement preparedStatement;
+        Account account = null;
+        try {
+            preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setInt(1, number);
+            ResultSet result = preparedStatement.executeQuery();
+            
+            result.next();
+            String accName = result.getString(2);
+            double balance = result.getDouble(3);
+            account = new Account(number, accName, balance);
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Bank.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         return account;
     }
 }
